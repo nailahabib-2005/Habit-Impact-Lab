@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Habit Impact Lab</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+body{
+    margin:0;
+    font-family:Arial;
+    background:#eef3f8;
+}
+
+.header{
+    background:linear-gradient(90deg,#4CAF50,#2196F3);
+    color:white;
+    text-align:center;
+    padding:15px;
+    font-size:20px;
+}
+
+.container{
+    width:80%;
+    margin:20px auto;
+    background:white;
+    padding:20px;
+    border-radius:12px;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:10px;
+}
+
+.box{
+    display:flex;
+    flex-direction:column;
+}
+
+input{
+    padding:8px;
+    margin-top:4px;
+}
+
+button{
+    margin-top:15px;
+    width:100%;
+    padding:12px;
+    background:#4CAF50;
+    color:white;
+    border:none;
+    cursor:pointer;
+    font-size:16px;
+}
+
+#result{
+    text-align:center;
+    margin-top:10px;
+    font-size:18px;
+    font-weight:bold;
+}
+
+#improve{
+    margin-top:10px;
+    padding:10px;
+    background:#e8f5e9;
+    border-left:5px solid #2e7d32;
+    display:none;
+}
+
+/* -------- PRODUCTIVITY FORMULA SECTION -------- */
+
+h2 {
+    color: #1f4e79;
+    margin-top: 20px;
+    font-size: 20px;
+}
+
+p {
+    color: #444;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+pre {
+    background: #0f172a;
+    color: #e2e8f0;
+    padding: 15px;
+    border-radius: 10px;
+    overflow-x: auto;
+    font-size: 14px;
+    line-height: 1.5;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+/* -------- REFERENCES / LINKS SECTION -------- */
+
+small {
+    display: block;
+    margin-top: 20px;
+    padding: 15px;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    font-size: 14px;
+    line-height: 1.6;
+    color: #333;
+}
+
+small h2 {
+    font-size: 18px;
+    margin-bottom: 10px;
+    color: #1f4e79;
+    border-bottom: 2px solid #e0e0e0;
+    padding-bottom: 5px;
+}
+
+small h3 {
+    margin-top: 12px;
+    font-size: 15px;
+    color: #2e7d32;
+}
+
+small a {
+    display: inline-block;
+    margin: 4px 0 8px 0;
+    color: #1565c0;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    padding: 3px 6px;
+    border-radius: 5px;
+}
+
+small a:hover {
+    background: #e3f2fd;
+    color: #0d47a1;
+    text-decoration: underline;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+Habit Impact Simulator (Healthy Range Model)
+</div>
+
+<div class="container">
+
+<div class="grid">
+
+<div class="box">
+<label>Study 📚 (2–4 hrs ideal)</label>
+<input id="study" type="number" value="3">
+</div>
+
+<div class="box">
+<label>Sleep 😴 (7–9 hrs ideal)</label>
+<input id="sleep" type="number" value="7">
+</div>
+
+<div class="box">
+<label>Screen 📱 (3–4 hrs ideal)</label>
+<input id="screen" type="number" value="4">
+</div>
+
+<div class="box">
+<label>Outdoor ⚽ (≈2 hrs ideal)</label>
+<input id="outdoor" type="number" value="2">
+</div>
+
+<div class="box">
+<label>Reading 📖 (1–2 hrs ideal)</label>
+<input id="reading" type="number" value="1">
+</div>
+
+<div class="box">
+<label>Exercise 🏃 (1–3 hrs ideal)</label>
+<input id="exercise" type="number" value="1">
+</div>
+
+</div>
+
+<button onclick="run()">Run Simulation</button>
+
+<h3 id="result"></h3>
+
+<div id="improve"></div>
+
+<canvas id="chart"></canvas>
+
+<br>
+
+<h2>📊 Productivity Score Formula</h2>
+
+<p>
+This system is based on a Weighted Score Model (MCDA + normalized weighting):
+</p>
+
+<pre>
+Score =
+(Study × 15)
++ (SleepScore)
++ (Outdoor × 10)
++ (Reading × 10)
++ (Exercise × 10)
+− (Screen × 6)
+
+Final Score = clamp(0 to 100)
+</pre>
+
+<small>
+<h2>Habit References</h2>
+
+<h3>Sleep (7–9 hours)</h3>
+<a href="https://www.cdc.gov/sleep/about/?CDC_AAref_Val=https://www.cdc.gov/sleep/about_sleep/how_much_sleep.html" target="_blank">
+CDC Sleep Guidelines
+</a>
+
+<h3>Exercise / Physical Activity</h3>
+<a href="https://www.who.int/news-room/fact-sheets/detail/physical-activity" target="_blank">
+WHO Physical Activity Guidelines
+</a>
+
+<h3>Screen Time / Media Use</h3>
+<a href="https://www.aap.org/en/patient-care/media-and-children/" target="_blank">
+American Academy of Pediatrics - Media Use
+</a>
+
+<h3>Study / Cognitive Performance</h3>
+<a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4274612/" target="_blank">
+NCBI Research on Cognitive Performance
+</a>
+
+<h3>Reading Benefits</h3>
+<a href="https://www.nichd.nih.gov/health/topics/reading" target="_blank">
+NIH - Reading & Brain Development Benefits
+</a>
+
+<h3>Productivity Formula Concept</h3>
+<a href="https://en.wikipedia.org/wiki/Weighted_sum_model" target="_blank">
+Weighted Sum Model (Math Foundation)
+</a>
+<br>
+
+<a href="https://en.wikipedia.org/wiki/Multi-criteria_decision_analysis" target="_blank">
+Multi-Criteria Decision Analysis (MCDA)
+</a>
+<br>
+</small>
+
+</div>
+
+<script>
+
+let chart;
+
+function scoreRange(value, min, max){
+    if(value >= min && value <= max) return 100;
+    let distance = 0;
+    if(value < min) distance = (value / min) * 100;
+    else distance = Math.max(0, 100 - ((value - max) * 20));
+    return Math.max(0, Math.min(100, distance));
+}
+
+function run(){
+
+let study = Number(document.getElementById("study").value);
+let sleep = Number(document.getElementById("sleep").value);
+let screen = Number(document.getElementById("screen").value);
+let outdoor = Number(document.getElementById("outdoor").value);
+let reading = Number(document.getElementById("reading").value);
+let exercise = Number(document.getElementById("exercise").value);
+
+/* ---------------- IDEAL SCORE SYSTEM ---------------- */
+
+let studyScore = scoreRange(study, 2, 4);
+let sleepScore = scoreRange(sleep, 7, 9);
+let screenScore = scoreRange(screen, 3, 4);
+let outdoorScore = scoreRange(outdoor, 2, 2);
+let readingScore = scoreRange(reading, 1, 2);
+let exerciseScore = scoreRange(exercise, 1, 3);
+
+/* ---------------- FINAL SCORE ---------------- */
+
+let score =
+(studyScore +
+sleepScore +
+screenScore +
+outdoorScore +
+readingScore +
+exerciseScore) / 6;
+
+score = Math.round(score);
+
+document.getElementById("result").innerHTML =
+"Productivity Score: " + score + "%";
+
+/* ---------------- IMPROVEMENT PLAN ---------------- */
+
+let msg = "";
+
+// Study
+if(study < 2)
+msg += "Study low → 2–4 hrs is ideal for strong focus and memory.<br>";
+else if(study > 4)
+msg += "Study too high → brain fatigue & reduced retention risk above 4 hrs.<br>";
+else
+msg += "Study is in optimal range → good focus balance.<br>";
+
+// Sleep
+if(sleep < 7)
+msg += "Sleep low → weak memory + low concentration (increase to 7–9 hrs).<br>";
+else if(sleep > 9)
+msg += "Oversleep → reduces daily alertness and productivity rhythm.<br>";
+else
+msg += "Sleep is optimal → supports learning & brain recovery.<br>";
+
+// Screen
+if(screen < 3)
+msg += "Very low screen use → fine, but ensure balanced digital learning use.<br>";
+else if(screen > 4)
+msg += "High screen time → reduces attention span and increases distraction.<br>";
+else
+msg += "Screen time is balanced → healthy digital usage.<br>";
+
+// Outdoor
+if(outdoor < 2)
+msg += "Low outdoor activity → reduces focus and energy levels.<br>";
+else
+msg += "Outdoor activity is good → improves brain oxygen flow.<br>";
+
+// Reading
+if(reading < 1)
+msg += "Low reading → increase to 1–2 hrs for better comprehension.<br>";
+else if(reading > 2)
+msg += "Too much reading → balance with activity for best learning efficiency.<br>";
+else
+msg += "Reading is optimal → strong cognitive benefit.<br>";
+
+// Exercise
+if(exercise < 1)
+msg += "Low exercise → reduces mental performance and energy.<br>";
+else if(exercise > 3)
+msg += "Too much exercise → may reduce recovery time.<br>";
+else
+msg += "Exercise is in healthy range → boosts brain function.<br>";
+
+document.getElementById("improve").style.display = "block";
+document.getElementById("improve").innerHTML =
+"<b>Improvement Analysis:</b><br>" + msg;
+
+/* ---------------- GRAPH ---------------- */
+
+let ctx = document.getElementById("chart").getContext("2d");
+
+if(chart) chart.destroy();
+
+chart = new Chart(ctx,{
+type:"bar",
+data:{
+labels:["Study","Sleep","Screen","Outdoor","Reading","Exercise"],
+datasets:[{
+label:"Healthy Range Score",
+data:[
+studyScore,
+sleepScore,
+screenScore,
+outdoorScore,
+readingScore,
+exerciseScore
+]
+}]
+}
+});
+
+}
+
+</script>
+
+</body>
+</html>
