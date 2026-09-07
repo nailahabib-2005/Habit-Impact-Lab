@@ -8,8 +8,7 @@ Users can enter values for study, sleep, screen time, outdoor activity, reading,
 
 
 🌐 Habit Impact Lab — Live Simulator:
-Open Habit Impact Lab Simulator
-
+https://nailahabib-2005.github.io/Habit-Impact-Lab/
 
 ## 📌 Project Overview
 
