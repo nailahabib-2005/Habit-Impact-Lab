@@ -7,6 +7,12 @@ The project uses computational thinking, rule-based scoring, and interactive dat
 Users can enter values for study, sleep, screen time, outdoor activity, reading, and exercise. The system evaluates these inputs against predefined healthy or target ranges and generates a productivity score along with personalized improvement feedback.
 
 ---
+## 🔗 Project Links
+
+* 💻 **Source Code:** [Habit-Impact-lab.html](https://github.com/nailahabib-2005/Habit-Impact-Lab/blob/main/Habit-Impact-lab.html)
+* 📄 **Project Documentation:** [Habit-Simulator.docx](https://github.com/nailahabib-2005/Habit-Impact-Lab/blob/main/Habit-Simulator.docx)
+* 📊 **Project Presentation:** [Habit Impact Simulator PPTX](https://github.com/nailahabib-2005/Habit-Impact-Lab/blob/main/Habit%20Impact%20Simulator.pptx)
+
 
 ## 📌 Project Overview
 
